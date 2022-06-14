@@ -2,6 +2,8 @@ package com.example.vuebackboard.web;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vuebackboard.entity.BoardEntity;
+import com.example.vuebackboard.model.Header;
 import com.example.vuebackboard.service.BoardService;
 import com.example.vuebackboard.web.dtos.BoardDto;
 
@@ -26,9 +29,10 @@ public class BoardController {
 	
 	
 	@GetMapping("/board/list")
-	public List<BoardDto> boardList(){
-		System.out.println("asdfjlkasdjfljaskldfjlaksd");
-		return boardService.getBoardList();}
+	public Header<List<BoardDto>> boardList(
+			@PageableDefault(sort = {"idx"}) Pageable pageable){
+		return boardService.getBoardList(pageable);
+	}
 	
 	@GetMapping("/board/{id}")
     public BoardDto getBoard(@PathVariable Long id) {

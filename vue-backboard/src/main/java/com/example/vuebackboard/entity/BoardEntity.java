@@ -17,9 +17,9 @@ public class BoardEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idx;
+	
 	private String title;
 	private String contents;
 	private String author;
 	private LocalDateTime createdAt;
-
 }

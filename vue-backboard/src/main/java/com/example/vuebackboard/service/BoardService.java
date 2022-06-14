@@ -5,10 +5,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.vuebackboard.entity.BoardEntity;
 import com.example.vuebackboard.entity.BoardRepository;
+import com.example.vuebackboard.model.Header;
+import com.example.vuebackboard.model.Pagination;
 import com.example.vuebackboard.web.dtos.BoardDto;
 
 import lombok.RequiredArgsConstructor;
@@ -21,9 +25,10 @@ public class BoardService {
 	
 	private final BoardRepository boardRepository;
 	
-	public List<BoardDto> getBoardList(){
-		List<BoardEntity> boardEntities = boardRepository.findAll();
+	public Header<List<BoardDto>> getBoardList(Pageable pageable){
 		List<BoardDto> dtos = new ArrayList<>();
+		
+		Page<BoardEntity> boardEntities = boardRepository.findAllByOrderByIdxDesc(pageable);
 		
 		for (BoardEntity entity : boardEntities) {
 			BoardDto dto = BoardDto.builder()
@@ -36,7 +41,14 @@ public class BoardService {
 			
 			dtos.add(dto);
 		}
-		return dtos;
+		
+		Pagination pagination = new Pagination(
+				(int) boardEntities.getTotalElements()
+				, pageable.getPageNumber() + 1
+				, pageable.getPageSize()
+				, 10
+				);
+		return Header.OK(dtos, pagination);
 	}
 	
 	// 게시글 가져오기
@@ -60,6 +72,14 @@ public class BoardService {
 				.createdAt(LocalDateTime.now())
 				.build();
 		
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
+		System.out.println(entity.getIdx());
 		return boardRepository.save(entity);
 	}
 	

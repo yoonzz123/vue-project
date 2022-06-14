@@ -63,7 +63,7 @@ export default{
         total_block_cnt: 0,
         total_list_cnt: 0,
         total_page_cnt: 0,
-      },
+      }, // 페이징데이터
       page: this.$route.query.page ? this.$route.query.page: 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
       keyword: this.$route.query.keyword,
@@ -90,13 +90,35 @@ export default{
         params: this.requestBoey,
         headers: {}
       }).then((res) => {
-        this.list = res.data // 서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있음.
+        if(res.data.result_code === "OK"){
+          this.list = res.data.data
+          this.paging = res.data.pagination
+          this.no = this.paging.total_list_cnt - ((this.paging.page - 1) * this.paging.page_size)
+        }
+
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1){
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
         }
       })
+    },
+
+    fnView(idx){
+      this.requestBody.idx = idx
+      this.$router.push({
+        path: './detail',
+        query: this.requestBody
+      })
+    },
+    fnPage(n){
+      if(this.page !=n){
+        this.page = n
+        this.fnGetList()
+      }
     }
+
+
+
   }
 }
 
